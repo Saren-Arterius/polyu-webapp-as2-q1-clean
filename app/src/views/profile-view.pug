@@ -1,0 +1,94 @@
+extends templates/main.pug
+
+block vars
+  - let title = 'User Profile'
+  
+block styles 
+  link(href=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.css`, rel='stylesheet')
+  link(href='https://cdn.datatables.net/responsive/2.2.0/css/responsive.dataTables.min.css', rel='stylesheet')
+  link(href=`${assetsBasePath}/app/css/profile/view.css` rel='stylesheet')
+    
+block scripts
+  script(src=`${assetsBasePath}/vendor/datatables/jquery.dataTables.js`)
+  script(src=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.js`)
+  script(src='https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.js')
+  script(src=`${assetsBasePath}/vendor/chart.js/Chart.min.js`)
+  script.
+    var userPosition = {lat: #{user.latitude}, lng: #{user.longitude}};
+    var username = '#{user.username}';
+    var reportData = !{JSON.stringify(report_data)};
+  script(src=`${assetsBasePath}/app/js/profile/view.js`)
+  script(async defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAb4ND8ySR2aovi4crYn7SlV0E3ke3-MBA&callback=initMap')
+
+
+block content
+  ol.breadcrumb
+    li.breadcrumb-item
+      a(href=`${entryPath}/`) Dashboard
+    li.breadcrumb-item.active User Profile
+  .row
+    .col-xl-6
+      .card.mb-3
+        .card-header 
+          i.fa.fa-user &nbsp;
+          span Profile
+        .card-body
+          .profile.clearfix(style='border: initial; margin-bottom: 0px; padding-bottom: 5px;')
+            .image
+              #background-image.clickable.img-cover.center-cropped(style=`background-image: url('${assetsBasePath}/app/profile-bg-${parseInt(user.created_at, 10) % 3}.jpg');`)
+            .user.clearfix(style='padding-top: 6px;')
+              a(href='https://en.gravatar.com/' target='_new')
+                .avatar
+                  #avatar.clickable.rounded.img-thumbnail.img-profile.center-cropped(style=`background-image: url('https://s.gravatar.com/avatar/${user.email_md5}?s=256&r=g');`)
+              h2.clickable#display_name.d-none.d-sm-block(style='font-size: 150%; margin: 8px 0px 0px 135px; line-height: initial;')
+                span#username @#{user.username}
+              h2.clickable#display_name.d-sm-none(style='font-size: 150%; margin: 30px 0px 0px 0px; line-height: initial;')
+                span#username @#{user.username}
+            .row(style='padding-top: 8px;')
+              .info(style='width: 100%; margin-right: 20px; margin-left: 20px;')
+                p 
+                  span Year of birth
+                  span :&nbsp;
+                  strong #{user.birth_year}
+                  br
+                  span Gender
+                  span :&nbsp;
+                  strong #{user.gender.toLowerCase()}
+                  br
+                  span Date registered (GMT+8)
+                  span :&nbsp;
+                  strong #{new Date(parseInt(user.created_at, 10) + tzoffset).toISOString().split('T')[0]}
+                  br
+                if req.auth && user.user_id === req.auth.user_id
+                  a.btn.btn-primary.btn-block(href=`${entryPath}/profile`) Edit profile
+      .card.mb-3
+        .card-header 
+          i.fa.fa-location-arrow &nbsp;
+          span Location
+        .card-body
+          #map(style='height: 15em')
+    .col-xl-6
+      .card.mb-3
+        .card-header
+          i.fa.fa-bar-chart &nbsp;
+          span Stats
+        .card-body
+          canvas#wins-loses(width='100%', height='50')
+      .card.mb-3
+        .card-header
+          i.fa.fa-gamepad &nbsp;
+          span Game record
+        .card-body
+          table#game-record.table.table-bordered.table-hover(width='100%', cellspacing='0')
+            thead
+              tr
+                th Rival
+                th Result
+                th Date
+            tbody
+              each record in game_records
+                tr
+                  td
+                    a(href=`/profile/${record.user_id}`) @#{record.username}
+                  td #{(record.host_user_id === user.user_id) === record.host_is_winner ? 'Win' : 'Lose'}
+                  td #{record.gs_created_at}

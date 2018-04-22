@@ -1,0 +1,103 @@
+extends templates/main.pug
+
+block vars
+  - let title = 'navbar_my-content'
+  
+block styles 
+  // Page level plugin CSS
+  link(href=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.css`, rel='stylesheet')
+  link(href='https://cdn.datatables.net/responsive/2.2.0/css/responsive.dataTables.min.css', rel='stylesheet')
+  link(href=`${assetsBasePath}/app/css/account.css`, rel='stylesheet')  
+    
+block scripts
+  script(src=`${assetsBasePath}/vendor/datatables/jquery.dataTables.js`)
+  script(src=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.js`)
+  script(src='https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.js')
+  script(src=`${assetsBasePath}/app/js/datatables/my-content.js`)
+  
+block content
+  // Breadcrumbs
+  ol.breadcrumb
+    li.breadcrumb-item
+      a(href='/')._l_general_dashboard
+    li._l_navbar_my-content.breadcrumb-item.active
+  .card.mb-3
+    .card-header
+      i.fa.fa-camera
+      span &nbsp;
+      span._l_content_photos-videos
+    .card-body
+      .table-responsive
+        table#files-dt.table.table-bordered.table-hover(width='100%', cellspacing='0')
+          thead
+            tr
+              th._l_content_thumbnail
+              th._l_content_type
+              th._l_content_description
+              th._l_content_created-at
+              th._l_content_price
+              th._l_content_views
+              th._l_stats_bookmarks
+              th._l_stats_likes
+              th._l_stats_revenue
+          tfoot
+            tr
+              th._l_content_thumbnail
+              th._l_content_type
+              th._l_content_description
+              th._l_content_created-at
+              th._l_content_price
+              th._l_content_views
+              th._l_stats_bookmarks
+              th._l_stats_likes
+              th._l_stats_revenue
+          tbody
+            each file in files
+              tr(onclick=`window.location = '/content/file/${file.file_id}'` style='cursor: pointer;')
+                td
+                  .rounded.img-thumbnail.img-profile.center-cropped(style=`background-image: url('/file/${file.thumbnail_file_id}'); width: 120px; height: 60px`)
+                td #{file.content_type}
+                td #{file.description}
+                td #{file.created_at}
+                td #{file.price}
+                td #{file.views}
+                td #{file.bookmark_count || 0}
+                td #{file.like_count || 0}
+                td #{file.revenue || 0}
+  .card.mb-3
+    .card-header
+      i.fa.fa-folder
+      span &nbsp;
+      span._l_content_decks
+    .card-body
+      .table-responsive
+        table#decks-dt.table.table-bordered.table-hover(width='100%', cellspacing='0')
+          thead
+            tr
+              th._l_content_thumbnail
+              th._l_content_description
+              th._l_content_created-at
+              th._l_content_price
+              th._l_stats_bookmarks
+              th._l_stats_likes
+              th._l_stats_revenue
+          tfoot
+            tr
+              th._l_content_thumbnail
+              th._l_content_description
+              th._l_content_created-at
+              th._l_content_price
+              th._l_stats_bookmarks
+              th._l_stats_likes
+              th._l_stats_revenue
+          tbody
+            each deck in decks
+              tr(onclick=`window.location = '/content/deck/${deck.deck_id}'` style='cursor: pointer;')
+                td
+                  .rounded.img-thumbnail.img-profile.center-cropped(style=`background-image: url('/file/${deck.preview_file_id}'); width: 120px; height: 60px`)
+                td #{deck.description}
+                td #{deck.created_at}
+                td #{deck.price}
+                td #{deck.bookmark_count || 0}
+                td #{deck.like_count || 0}
+                td #{deck.revenue || 0}

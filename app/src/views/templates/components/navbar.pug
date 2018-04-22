@@ -1,0 +1,42 @@
+// Navigation
+nav#mainNav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
+  a.navbar-brand(href=`${entryPath}/`) Surakarta Online
+  button.navbar-toggler.navbar-toggler-right(type='button', data-toggle='collapse', data-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
+    span.navbar-toggler-icon
+  #navbarResponsive.collapse.navbar-collapse
+    ul#exampleAccordion.navbar-nav.navbar-sidenav
+      li.nav-item(data-toggle='tooltip', data-placement='right', title='Dashboard')
+        a.nav-link(href=`${entryPath}/`)
+          i.fa.fa-fw.fa-dashboard
+          span.nav-link-text Dashboard
+      li.nav-item(data-toggle='tooltip', data-placement='right', title='Game List')
+        a.nav-link(href=`${entryPath}/game`)
+          i.fa.fa-fw.fa-gamepad
+          span.nav-link-text Game List
+      li.nav-item(data-toggle='tooltip', data-placement='right', title='Ranking')
+        a.nav-link(href=`${entryPath}/ranking`)
+          i.fa.fa-fw.fa-trophy
+          span.nav-link-text Ranking
+      li.nav-item(data-toggle='tooltip', data-placement='right', title='My Profile')
+        a.nav-link(href=req.auth ? `${entryPath}/profile/${req.auth.user_id}` : `${entryPath}/login`)
+          i.fa.fa-fw.fa-user
+          span.nav-link-text My Profile
+    ul.navbar-nav.sidenav-toggler
+      li.nav-item
+        a#sidenavToggler.nav-link.text-center
+          i.fa.fa-fw.fa-angle-left
+    ul.navbar-nav.ml-auto
+      if req.auth
+        li.nav-item 
+          a.nav-link(href=`${entryPath}/profile/${req.auth.user_id}`)
+            img.rounded(src=`https://s.gravatar.com/avatar/${req.auth.email_md5}?s=80&r=g` style='max-height: 1.3em; max-width: 2em; margin-right: 0.3em; padding-bottom: 0.1em;')
+            | #{(req.user && ('@' + req.user.username)) || req.auth.email}
+        li.nav-item
+          a.nav-link(data-toggle='modal', data-target='#exampleModal')
+            i.fa.fa-fw.fa-sign-out
+            span Logout
+      else
+        li.nav-item
+          a.nav-link(href=`${entryPath}/login`)
+            i.fa.fa-fw.fa-sign-in
+            span Login / Register

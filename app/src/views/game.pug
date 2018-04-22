@@ -1,0 +1,60 @@
+extends templates/main.pug
+
+block vars
+  - let title = 'Game List'
+  
+block styles 
+  // Page level plugin CSS
+  link(href=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.css`, rel='stylesheet')
+  link(href='https://cdn.datatables.net/responsive/2.2.0/css/responsive.dataTables.min.css', rel='stylesheet')
+    
+block scripts
+  script(src=`${assetsBasePath}/vendor/datatables/jquery.dataTables.js`)
+  script(src=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.js`)
+  script(src='https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.js')
+  script(src=`${assetsBasePath}/app/js/game.js`)
+  
+block content
+  // Breadcrumbs
+  ol.breadcrumb
+    li.breadcrumb-item
+      a(href=`${entryPath}/`) Dashboard
+    li.breadcrumb-item.active Game List
+  .row
+    .col-xl-12
+      .card.mb-3
+        .card-header
+          i.fa.fa-gamepad &nbsp;
+          span Game List
+        .card-body
+          br
+          table#game-list.table.table-bordered.table-hover(width='100%', cellspacing='0')
+            thead
+              tr
+                th Host
+                th Guest Challenger
+                th Date Created
+                th Action
+            tbody
+              each row, i in rows
+                tr
+                  td
+                    a(href=`/profile/${row.host_user_id}`) @#{row.host_username}
+                  td
+                    if row.guest_user_id
+                      a(href=`/profile/${row.guest_user_id}`) @#{row.guest_username}
+                    else
+                      | -
+                  td #{row.session_created_at}
+                  td
+                    if sess && sess.game_session_id === row.game_session_id
+                      a.btn.btn-primary(href=`/game/${row.game_session_id}`) Resume Game
+                    else if req.user && !row.guest_user_id && !sess
+                      a.btn.btn-primary(href=`/game/${row.game_session_id}`) Join Game
+                    else
+                      a.btn.btn-success(href=`/game/${row.game_session_id}`) Spectate
+
+      form(method='POST')
+        button.btn.btn-primary.btn-block.btn-lg(type='submit')
+          i.fa.fa-plus &nbsp;
+          | New Game

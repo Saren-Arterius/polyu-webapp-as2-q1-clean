@@ -1,0 +1,82 @@
+extends ../templates/main.pug
+
+block vars
+  - let title = 'title_game-sessions'
+
+block styles 
+  // Page level plugin CSS
+  link(href=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.css`, rel='stylesheet')
+  link(href='https://cdn.datatables.net/responsive/2.2.0/css/responsive.dataTables.min.css', rel='stylesheet')
+  link(href='https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha.17/css/tempusdominus-bootstrap-4.min.css', rel='stylesheet')
+  link(href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.35.0/codemirror.min.css', rel='stylesheet')
+
+block scripts
+  script(src=`${assetsBasePath}/vendor/datatables/jquery.dataTables.js`)
+  script(src=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.js`)
+  script(src='https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha.17/js/tempusdominus-bootstrap-4.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.35.0/codemirror.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.35.0/addon/display/placeholder.min.js')
+  script(src=`${assetsBasePath}/app/js/game-session/edit.js`)
+
+block content
+  // Breadcrumbs
+  script
+    | var answers = !{answers};
+  ol.breadcrumb
+    li.breadcrumb-item
+      a(href=`${entryPath}/panel`)._l_general_dashboard
+    li.breadcrumb-item
+      a(href=`${entryPath}/panel/game-session/list`)._l_navbar_game-sessions
+    if session.game_session_id
+      li.breadcrumb-item.active Edit Game Session
+    else
+      li.breadcrumb-item.active Create Game Session
+  .card.mb-3
+    .card-header
+      i.fa.fa-plus
+      span &nbsp;
+      if session.game_session_id
+        span Edit Game Session
+      else
+        span Create Game Session
+    .card-body
+      form#session-form
+        .form-group.row
+          label.col-sm-2.col-form-label(for='session-id') ID
+          input#session-id.col-sm-10.form-control(name='game_session_id' type='text' readonly=true value=session.game_session_id || '')
+        .form-group.row
+          label.col-sm-2.col-form-label(for='session-title') Title
+          input#session-title.col-sm-10.form-control(name='title', type='text' placeholder='2018 New Year Event' value=session.title || '')
+        .form-group.row
+          label.col-sm-2.col-form-label(for='session-description') Description
+          input#session-description.col-sm-10.form-control(name='description' type='text' placeholder='2018 New Year is very happy. Let\'s play a game!' value=session.description || '')
+        .form-group.row
+          label.col-sm-2.col-form-label(for='session-prize') Prize
+          .input-group.col-sm-3(style='padding: 0;')
+            .input-group-prepend
+              .input-group-text HKD$
+            input#session-prize.form-control(name='prize' type='number' placeholder='2500' required=true value=session.money_prize_amount || '' min=0 max=99999)
+        .form-group.row
+          label.col-sm-2.col-form-label(for='session-ytid') YouTube ID
+          input#session-ytid.col-sm-3.form-control(name='ytid' type='text' placeholder='5Q8BaJmni-w' value=session.youtube_id || '')
+        .form-group.row
+          label.col-sm-2.col-form-label(for='session-share-url') Share URL
+          input#session-share-url.col-sm-10.form-control(name='share_url' type='text' placeholder='https://www.facebook.com/groups/maonshanhk/?multi_permalinks=1915583951799555&notif_id=1520578442649577&notif_t=group_highlights&ref=notif' value=session.share_url || '')
+        .form-group.row
+          label.col-sm-2.col-form-label(for='session-start-at') Start At (UTC+8)
+          #session-start-at.col-sm-3.input-group.date(data-target-input='nearest' style='padding: 0;')
+            input.form-control.datetimepicker-input(name='start_at_text' type='text' data-target='#session-start-at' placeholder='Empty = draft')
+            .input-group-append(data-target='#session-start-at' data-toggle='datetimepicker')
+              .input-group-text
+                i.fa.fa-calendar
+        .form-group.row
+          label.col-sm-2.col-form-label(for='session-end-at') End At (UTC+8)
+          input#session-end-at.col-sm-3.form-control(type='text' disabled=true value=session.end_at)
+        .form-group.row
+          label.col-sm-2.col-form-label(for='session-questions') Questions
+          .col-sm-10(style='padding: 0;')
+            textarea#session-questions.form-control(type='text' style='height: 50em' placeholder='1 + 1 = ?\n1\n!@2\n3\n4\n\n2 * 2 = ?\n2\n3\n!@4\n5') #{session.questions_text}
+            #session-questions-error.invalid-feedback
+        button#session-form-submit.btn.btn-success.btn-block.btn-lg(type='submit') Submit

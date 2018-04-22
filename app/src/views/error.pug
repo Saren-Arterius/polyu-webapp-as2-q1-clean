@@ -1,0 +1,23 @@
+extends templates/card.pug
+
+block vars
+  - let title = 'general_error'
+  
+block content
+  .card.card-register.mx-auto.mt-5
+    .card-header
+      span Error (#{error.message})
+    .card-body
+      form
+        case error.message
+          when 'NOT_FOUND'
+            p The page you requested was not found. Please ensure the URL is valid.
+            - break
+          default
+            p #{error.message}
+            - break
+        if error
+          p= error.status
+          pre #{error.stack}
+      .text-center
+        a.d-block.small.mt-3(href='#' onclick='return window.history.back();') OMG, let's go back.

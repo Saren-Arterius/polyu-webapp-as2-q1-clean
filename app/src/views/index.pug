@@ -1,0 +1,107 @@
+extends templates/main.pug
+
+block vars
+  - let title = 'Dashboard'
+  
+block styles 
+  // Page level plugin CSS
+  link(href=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.css`, rel='stylesheet')
+  link(href='https://cdn.datatables.net/responsive/2.2.0/css/responsive.dataTables.min.css', rel='stylesheet')
+    
+block scripts
+  script(src=`${assetsBasePath}/vendor/datatables/jquery.dataTables.js`)
+  script(src=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.js`)
+  script(src='https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.js')
+  script(src=`${assetsBasePath}/vendor/chart.js/Chart.min.js`)
+  script.
+    var reportData = !{JSON.stringify(report_data)};
+  script(src=`${assetsBasePath}/app/js/index.js`)
+  
+block content
+  // Breadcrumbs
+  ol.breadcrumb
+    li.breadcrumb-item.active Dashboard
+  .row
+    .col-xl-3.col-sm-6.mb-3
+      .card.text-white.bg-primary.o-hidden.h-100
+        .card-body
+          .card-body-icon
+            i.fa.fa-fw.fa-user
+          .mr-5
+            | #{report_data.users_cum_figures[report_data.users_cum_figures.length - 1] || 'Current No'} Registered User(s)!
+        a.card-footer.text-white.clearfix.small.z-1(href='/ranking')
+          span.float-left View Details
+          span.float-right
+            i.fa.fa-angle-right
+    .col-xl-3.col-sm-6.mb-3
+      .card.text-white.bg-warning.o-hidden.h-100
+        .card-body
+          .card-body-icon
+            i.fa.fa-fw.fa-smile-o
+          .mr-5
+            span#online-users 1
+            span  Visitor(s) Online!
+        a.card-footer.text-white.clearfix.small.z-1(href='/game')
+          span.float-left View Details
+          span.float-right
+            i.fa.fa-angle-right
+    .col-xl-3.col-sm-6.mb-3
+      .card.text-white.bg-success.o-hidden.h-100
+        .card-body
+          .card-body-icon
+            i.fa.fa-fw.fa-gamepad
+          .mr-5
+            | Total #{report_data.games_cum_figures[report_data.games_cum_figures.length - 1]} Game(s) Played!
+        a.card-footer.text-white.clearfix.small.z-1(href='/ranking')
+          span.float-left View Details
+          span.float-right
+            i.fa.fa-angle-right
+    .col-xl-3.col-sm-6.mb-3
+      .card.text-white.bg-danger.o-hidden.h-100
+        .card-body
+          .card-body-icon
+            i.fa.fa-fw.fa-fire
+          .mr-5
+            | #{ongoing_games || 'Current No'} Game(s) Ongoing!
+        a.card-footer.text-white.clearfix.small.z-1(href='/game')
+          span.float-left View Details
+          span.float-right
+            i.fa.fa-angle-right
+  .row
+    .col-xl-6
+      .card.mb-3
+        .card-header
+          i.fa.fa-question &nbsp;
+          span Introduction
+        .card-body
+          h3 What is Surakarta?
+          p Surakarta is a little-known Indonesian strategy board game for 2 players. Its objective is to capture all the opponent´s pieces.
+          img(src=`${assetsBasePath}/app/logo.png`)
+          br
+          br
+          h3 Moves
+          p Each player makes one move by turn.
+          p
+            | The pieces have to be moved in any direction (vertically, horzontally or diagonally) between two adjacent joints; the
+            | destination joint must be empty. So, pieces are moved like kings in chess.
+          h3 Capturing
+          p
+            | Captures are made by moving a piece along one of the lines and landing on the joint occupied by the captured piece.
+          p
+            | During the trip the capturing piece must round at least along one of the eight curves of the board.
+          p
+            | The route must be free: the capturing piece cannot jump over any of the pieces placed on the board. Anyway, after rounding
+            | some of the curves, the capturing piece may pass during the trip over the previously occupied joint.
+    .col-xl-6
+      .card.mb-3
+        .card-header
+          i.fa.fa-bar-chart &nbsp;
+          span Users
+        .card-body
+          canvas#users(width='100%', height='50')
+      .card.mb-3
+        .card-header
+          i.fa.fa-bar-chart &nbsp;
+          span Games
+        .card-body
+          canvas#games(width='100%', height='50')

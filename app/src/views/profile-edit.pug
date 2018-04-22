@@ -1,0 +1,71 @@
+extends templates/main.pug
+
+block vars
+  - let title = 'Edit profile'
+  
+block styles 
+    
+block scripts
+  script(src=`${assetsBasePath}/app/js/profile/edit.js`)
+  
+block content
+  // Breadcrumbs
+  ol.breadcrumb
+    li.breadcrumb-item
+      a(href=`${entryPath}/`) Dashboard
+    li.breadcrumb-item.active Edit profile
+  if !user
+    .alert.alert-warning(role='alert') You must fill in your profile information to continue.
+  if errors
+    .alert.alert-danger(role='alert')
+      each err in errors
+        div #{err}
+  .row
+    .col-sm-12.col-lg-9
+      form(method='POST')
+        .form-group.row
+          label.col-sm-2.col-form-label(for='username') Username
+          .col-sm-10
+            .input-group
+              .input-group-prepend
+                span.input-group-text @
+              input#username.form-control(type='text' name='username' placeholder='handsome_guy_1984 (A-Za-z0-9_) (3-20 chars)' required pattern='[A-Za-z0-9_]{3,20}' value=`${(user && user.username) || ''}`)
+        .form-group.row
+          label.col-sm-2.col-form-label(for='birth-year') Year of birth
+          .col-sm-10
+            input#birth-year.form-control(type='number' name='birth_year' placeholder='1984' required min='1900' max=`${new Date().getFullYear()}` value=`${(user && user.birth_year) || ''}`)
+        fieldset.form-group
+          .row
+            legend.col-form-label.col-sm-2.pt-0 Gender
+            .col-sm-10
+              .form-check
+                if user && user.gender === 'MALE'
+                  input#gridRadios1.form-check-input(type='radio' name='gender' value='MALE' required checked)
+                else
+                  input#gridRadios1.form-check-input(type='radio' name='gender' value='MALE' required)
+                label.form-check-label(for='gridRadios1')
+                  | Male
+              .form-check
+                if user && user.gender === 'FEMALE'
+                  input#gridRadios2.form-check-input(type='radio' name='gender' value='FEMALE' required checked)
+                else
+                  input#gridRadios2.form-check-input(type='radio' name='gender' value='FEMALE' required)
+                label.form-check-label(for='gridRadios2')
+                  | Female
+              .form-check
+                if user && user.gender === 'OTHER'
+                  input#gridRadios3.form-check-input(type='radio' name='gender' value='OTHER' required checked)
+                else
+                  input#gridRadios3.form-check-input(type='radio' name='gender' value='OTHER' required)
+                label.form-check-label(for='gridRadios3')
+                  | Other
+        .form-group.row
+          label.col-sm-2.col-form-label(for='latlng') Location
+          .col-sm-10
+            .input-group
+              .input-group-prepend
+                a.input-group-text(href='#' onclick='return readLocation();') Read from browser
+              input#latlng.form-control(type='text' name='latlng' required pattern='[0-9]+\.?[0-9]*,[0-9]+\.?[0-9]*' value=`${(user && user.latitude + ',' + user.longitude) || ''}`)
+        .form-group.row
+          .col-sm-12
+            button.btn.btn-primary.btn-block(type='submit') Submit

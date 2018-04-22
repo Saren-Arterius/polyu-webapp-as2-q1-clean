@@ -1,0 +1,84 @@
+extends templates/main.pug
+
+block vars
+  - let title = 'Ranking'
+  
+block styles 
+  // Page level plugin CSS
+  link(href=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.css`, rel='stylesheet')
+  link(href='https://cdn.datatables.net/responsive/2.2.0/css/responsive.dataTables.min.css', rel='stylesheet')
+    
+block scripts
+  script(src=`${assetsBasePath}/vendor/datatables/jquery.dataTables.js`)
+  script(src=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.js`)
+  script(src='https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.js')
+  script(src=`${assetsBasePath}/app/js/ranking.js`)
+  
+block content
+  // Breadcrumbs
+  ol.breadcrumb
+    li.breadcrumb-item
+      a(href=`${entryPath}/`) Dashboard
+    li.breadcrumb-item.active Ranking
+  .row
+    .col-xl-12
+      .card.mb-3
+        .card-header
+          i.fa.fa-trophy &nbsp;
+          span Global Ranking
+        .card-body
+          table#ranking.table.table-bordered.table-hover(width='100%', cellspacing='0')
+            thead
+              tr
+                th Rank
+                th User
+                th Join Date
+                th Last Played
+                th Total wins
+                th Total loses
+                th K/D
+                th Score
+            tbody
+              each row in tables[0]
+                tr
+                  td #{row.rank}
+                  td
+                    a(href=`/profile/${row.user_id}`) @#{row.username}
+                  td #{row.created_at}
+                  td #{row.last_played}
+                  td #{row.wins}
+                  td #{row.loses}
+                  - let kd = parseInt(row.wins) / (parseInt(row.wins) + parseInt(row.loses));
+                  td #{Math.round(kd * 100) / 100}
+                  td #{row.score}
+    each t, i in ['Ranking (Age <= 30)', 'Ranking (Age > 30)','Ranking (Males only)','Ranking (Females only)',]
+      .col-xl-6
+        .card.mb-3
+          .card-header
+            i.fa.fa-trophy &nbsp;
+            span #{t}
+          .card-body
+            table.table.table-bordered.table-hover(id=`ranking${i + 1}` width='100%', cellspacing='0')
+              thead
+                tr
+                  th Rank
+                  th User
+                  th Join Date
+                  th Last Played
+                  th Total wins
+                  th Total loses
+                  th K/D
+                  th Score
+              tbody
+                each row in tables[i + 1]
+                  tr
+                    td #{row.rank}
+                    td
+                      a(href=`/profile/${row.user_id}`) @#{row.username}
+                    td #{row.created_at}
+                    td #{row.last_played}
+                    td #{row.wins}
+                    td #{row.loses}
+                    - let kd = parseInt(row.wins) / (parseInt(row.wins) + parseInt(row.loses));
+                    td #{Math.round(kd * 100) / 100}
+                    td #{row.score}

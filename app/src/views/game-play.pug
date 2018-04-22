@@ -1,0 +1,35 @@
+extends templates/main.pug
+
+block vars
+  - let title = 'Play Surakarta'
+  
+block styles 
+  // Page level plugin CSS
+  link(href=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.css`, rel='stylesheet')
+  link(href='https://cdn.datatables.net/responsive/2.2.0/css/responsive.dataTables.min.css', rel='stylesheet')
+    
+block scripts
+  script(src=`${assetsBasePath}/vendor/datatables/jquery.dataTables.js`)
+  script(src=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.js`)
+  script(src='https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.js')
+  script.
+    var gameSessionID = location.toString().substr(location.toString().lastIndexOf('/') + 1);
+    var myUserID = '!{req.user && req.user.user_id}';
+  script(src=`${assetsBasePath}/app/js/game-play.js`)
+  
+block content
+  // Breadcrumbs
+  ol.breadcrumb
+    li.breadcrumb-item
+      a(href=`${entryPath}/`) Dashboard
+    li.breadcrumb-item
+      a(href=`${entryPath}/game`) Game List
+    li.breadcrumb-item.active Play Surakarta
+  .row
+    .col-xl-12
+      .card.mb-3
+        .card-header
+          i.fa.fa-gamepad &nbsp;
+          span Play Surakarta
+        .card-body(style="padding: 0; text-align: center;")
+          canvas#game

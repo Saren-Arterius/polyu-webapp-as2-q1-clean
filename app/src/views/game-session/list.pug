@@ -1,0 +1,66 @@
+extends ../templates/main.pug
+
+block vars
+  - let title = 'title_game-sessions'
+
+block styles 
+  // Page level plugin CSS
+  link(href=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.css', rel='stylesheet`)
+  link(href='https://cdn.datatables.net/responsive/2.2.0/css/responsive.dataTables.min.css', rel='stylesheet')
+
+block scripts
+  script(src=`${assetsBasePath}/vendor/datatables/jquery.dataTables.js`)
+  script(src=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.js`)
+  script(src='https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.js')
+  script(src=`${assetsBasePath}/app/js/game-session/list.js`)
+
+block content
+  // Breadcrumbs
+  ol.breadcrumb
+    li.breadcrumb-item
+      a(href=`${entryPath}/panel`)._l_general_dashboard
+    li._l_navbar_game-sessions.breadcrumb-item.active
+  .card.mb-3
+    .card-header
+      i.fa.fa-question
+      span &nbsp;
+      span._l_navbar_game-sessions
+    .card-body
+      .table-responsive
+        table#sessions-dt.table.table-bordered.table-hover(width='100%', cellspacing='0')
+          thead
+            tr
+              th Title
+              th Prize
+              th YTID
+              th Q Count
+              th Start
+              th End
+              th Created
+              th Live
+          tfoot
+            tr
+              th Title
+              th Prize
+              th YTID
+              th Q Count
+              th Start
+              th End
+              th Created
+              th Live
+          tbody
+            each session in sessions
+              tr(onclick=`window.location = '${entryPath}/panel/game-session/edit/${session.game_session_id}';` style='cursor: pointer;')
+                td #{session.title}
+                td #{session.money_prize_amount}
+                td #{session.youtube_id}
+                td #{session.question_count || 0}
+                td #{session.start_at}
+                td #{session.end_at}
+                td #{session.created_at}
+                td
+                  if session.start_at < Date.now() && session.question_count > 0
+                    button.btn.btn-primary(onclick=`event.stopPropagation(); window.location = '${entryPath}/panel/game-session/live/${session.game_session_id}'` style='cursor: pointer;') Live
+                  else
+                    button.btn.btn-warning.disabled
+  a.btn.btn-success.btn-block.btn-lg(type="button" href=`${entryPath}/panel/game-session/create` style='-webkit-appearance: initial;') Create new Game Session

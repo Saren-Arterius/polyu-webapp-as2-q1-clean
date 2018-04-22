@@ -1,0 +1,43 @@
+extends ../templates/main.pug
+
+block vars
+  - let title = 'title_game-sessions'
+
+block styles 
+  // Page level plugin CSS
+  link(href=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.css', rel='stylesheet`)
+  link(href='https://cdn.datatables.net/responsive/2.2.0/css/responsive.dataTables.min.css', rel='stylesheet')
+
+block scripts
+  script(src=`${assetsBasePath}/vendor/datatables/jquery.dataTables.js`)
+  script(src=`${assetsBasePath}/vendor/datatables/dataTables.bootstrap4.js`)
+  script(src='https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.js')
+  script(src=`${assetsBasePath}/app/js/game-session/live.js`)
+
+block content
+  span#test(src=`${JSON.stringify(bundle)}`)
+  .panel.panel-default
+    .panel-heading Live
+    .panel-body
+      iframe(width="100%", height="315", src=`https://www.youtube.com/embed/${session.youtube_id}`, frameborder="0", allow="autoplay; encrypted-media", allowfullscreen="false")
+      span#description Next Action: #{isNextNewQuestion || isNextNewQuestion == null ? 'Start' : 'Reveal Answer Of'} Question: #{currentQuestionNumber + 1}
+      br
+      br
+      span#title Title: #{questions[currentQuestionNumber].title}
+      br
+      br
+      span#A A: #{questions[currentQuestionNumber].answers['A']}
+      br
+      span#B B: #{questions[currentQuestionNumber].answers['B']}
+      br
+      span#C C: #{questions[currentQuestionNumber].answers['C']}
+      br
+      span#D D: #{questions[currentQuestionNumber].answers['D']}
+      br
+      br
+      span#correct-answer Correct Answer: #{questions[currentQuestionNumber].correct_answer_choice}
+      br
+      br
+      button.btn.btn-primary(onclick='next()') Next
+
+

@@ -1,0 +1,13 @@
+extends base.pug
+
+block body
+  body#page-top.fixed-nav.sticky-footer.bg-dark
+    include components/navbar.pug
+    .content-wrapper
+      .container-fluid
+        block content
+      include components/footer.pug
+      include components/scroll-to-top.pug
+      include components/modals/logout.pug
+      include js.pug
+      block scripts

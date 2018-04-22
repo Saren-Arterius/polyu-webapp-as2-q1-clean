@@ -1,0 +1,47 @@
+{
+  "name": "webapp-assignment-2-q1",
+  "version": "0.0.0",
+  "private": true,
+  "nodemonConfig": {
+    "watch": [
+      "app/src/*"
+    ]
+  },
+  "scripts": {
+    "start": "sh -c 'cd app/dist && nodemon -L bin/server.js'",
+    "clean": "rm -rf dist && mkdir dist",
+    "dev": "yarn build-watch & sleep 5 && nodemon --exec sh -c 'yarn start'",
+    "prod": "yarn build && yarn start",
+    "build": "babel app/src --out-dir app/dist --copy-files",
+    "build-watch": "babel app/src --out-dir app/dist --copy-files --watch"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.39",
+    "@babel/core": "^7.0.0-beta.39",
+    "@babel/preset-env": "^7.0.0-beta.39",
+    "eslint": "^4.11.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-react": "^7.5.1"
+  },
+  "dependencies": {
+    "@types/express": "^4.11.1",
+    "@types/knex": "^0.14.8",
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "firebase-admin": "^5.12.0",
+    "ioredis": "^3.2.2",
+    "knex": "^0.14.4",
+    "md5": "^2.2.1",
+    "morgan": "^1.9.0",
+    "pg": "^7.4.1",
+    "pug": "^2.0.0-rc.4",
+    "redis": "^2.8.0",
+    "redis-lock": "^0.1.4",
+    "socket.io": "^2.1.0"
+  }
+}

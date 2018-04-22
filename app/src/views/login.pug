@@ -1,0 +1,24 @@
+extends templates/card.pug
+
+block vars
+  - let title = 'Login or Register'
+
+block content
+  .card.card-login.mx-auto.mt-5
+    .card-header Login or Register
+    .card-body
+      form#login-form
+        .form-group
+          a.btn.btn-block.btn-social.btn-google.btn-lg(style='color: white;')
+            span.fa.fa-google
+            span Sign in with Google
+        hr
+        .form-group
+          label(for='email') Email
+          input#email.form-control(name='email' type='email' required placeholder='abc@xyz.com')
+        .form-group
+          label(for='password') Password
+          input#password.form-control(name='password' type='password' required placeholder='********')
+        button.btn.btn-block.btn-primary.btn-lg(type='submit' style='color: white;') Login or Register
+      .text-center
+        a.d-block.small.mt-3(href='#' onclick='return forgotPassword();') Forgot password?
